@@ -47,6 +47,9 @@ BUILD_ARTIFACT := $(BUILD_ARTIFACT_PREFIX)$(BUILD_ARTIFACT_NAME)$(if $(BUILD_ART
 LSS += \
 Calculator_LCD_KEYPAD.lss \
 
+FLASH_IMAGE += \
+Calculator_LCD_KEYPAD.hex \
+
 SIZEDUMMY += \
 sizedummy \
 
@@ -71,6 +74,12 @@ Calculator_LCD_KEYPAD.lss: Calculator_LCD_KEYPAD.elf makefile objects.mk $(OPTIO
 	@echo 'Finished building: $@'
 	@echo ' '
 
+Calculator_LCD_KEYPAD.hex: Calculator_LCD_KEYPAD.elf makefile objects.mk $(OPTIONAL_TOOL_DEPS)
+	@echo 'Create Flash image (ihex format)'
+	-avr-objcopy -R .eeprom -R .fuse -R .lock -R .signature -O ihex Calculator_LCD_KEYPAD.elf  "Calculator_LCD_KEYPAD.hex"
+	@echo 'Finished building: $@'
+	@echo ' '
+
 sizedummy: Calculator_LCD_KEYPAD.elf makefile objects.mk $(OPTIONAL_TOOL_DEPS)
 	@echo 'Invoking: Print Size'
 	-avr-size --format=avr --mcu=atmega32 Calculator_LCD_KEYPAD.elf
@@ -79,10 +88,10 @@ sizedummy: Calculator_LCD_KEYPAD.elf makefile objects.mk $(OPTIONAL_TOOL_DEPS)
 
 # Other Targets
 clean:
-	-$(RM) $(ELFS)$(OBJS)$(ASM_DEPS)$(S_DEPS)$(SIZEDUMMY)$(S_UPPER_DEPS)$(LSS)$(C_DEPS) Calculator_LCD_KEYPAD.elf
+	-$(RM) $(FLASH_IMAGE)$(ELFS)$(OBJS)$(ASM_DEPS)$(S_DEPS)$(SIZEDUMMY)$(S_UPPER_DEPS)$(LSS)$(C_DEPS) Calculator_LCD_KEYPAD.elf
 	-@echo ' '
 
-secondary-outputs: $(LSS) $(SIZEDUMMY)
+secondary-outputs: $(LSS) $(FLASH_IMAGE) $(SIZEDUMMY)
 
 .PHONY: all clean dependents main-build
 

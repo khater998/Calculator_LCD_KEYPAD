@@ -101,8 +101,9 @@ void app_start(void)
 					/* operator variable will store the required operator required (*, /, +, or -)
 					 * operand1[] will store the operand1 (all chars before the operator)
 					 * operand2[] will store the second operand (all chars after operator and first null character
-					 *  op_counter variable will be used to */
-					uint8 operator = 0, operand1[16], operand2[16], op_counter;
+					 * op_counter variable will be used to
+					 * zero_div_flag to indicate a division by zero operation*/
+					uint8 operator = 0, operand1[16], operand2[16], op_counter, zero_div_flag = 0;
 
 					/* op1 will store operand1[] integer value.
 					 * op2 will store operand2[] integer value.
@@ -145,6 +146,18 @@ void app_start(void)
 						break;
 
 					case '/':
+						if(op2 == 0)
+						{
+							LCD_4bit_sendStringAtPosition(&board_lcd,2 , 1, "DIV by ZERO!!");
+							_delay_ms(500);
+							LCD_4bit_clear(&board_lcd);
+							_delay_ms(500);
+							LCD_4bit_sendStringAtPosition(&board_lcd,2 , 1, "DIV by ZERO!!");
+							_delay_ms(500);
+							LCD_4bit_clear(&board_lcd);
+							zero_div_flag = 1;
+							break;
+						}
 						result = op1 / op2;
 						break;
 
@@ -155,15 +168,20 @@ void app_start(void)
 					case '-':
 						result = op1 - op2;
 					}
+					if(1 == zero_div_flag)
+					{
+						/* skip printing result step*/
+					}
+					else
+					{
+						/* print the result on the screen for 2 seconds */
+						LCD_4bit_setCursorLocation(&board_lcd, 1, 1);
+						LCD_4bit_sendNum(&board_lcd, result);
+						_delay_ms(2000);
 
-					/* print the result on the screen for 2 seconds */
-					LCD_4bit_setCursorLocation(&board_lcd, 1, 1);
-					LCD_4bit_sendNum(&board_lcd, result);
-					_delay_ms(2000);
-
-					/* clear the LCD */
-					LCD_4bit_clear(&board_lcd);
-
+						/* clear the LCD */
+						LCD_4bit_clear(&board_lcd);
+					}
 					/* WE HAVE FOUND THE OPERATOR AND DONE THE OPERATION, GET OUT OF THE LOOP */
 					break;
 				}else{}

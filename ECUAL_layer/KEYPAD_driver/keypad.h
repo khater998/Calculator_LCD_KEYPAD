@@ -22,6 +22,49 @@
 
 #define NUMBER_OF_ROWS 		4
 #define NUMBER_OF_COLUMNS 	4
+#define KEYPAD_ACTIVE_HIGH  0
+/* KEYPAD_ACTIVE_HIGH must be set to 1 when columns pins are connected to ground,
+ * so when a button is pressed it sends a HIGH signal.
+ *
+ * KEYPAD_ACTIVE_HIGH must be set to 0 when columns pins are connected to 5v,
+ * so when a button is pressed it sends a LOW signal.
+ */
+#if(KEYPAD_ACTIVE_HIGH == 1)
+
+	#define KEYPAD_BUTTON_PRESSED 		GPIO_HIGH
+	#define KEYPAD_BUTTON_RELEASED 		GPIO_LOW
+
+#elif(KEYPAD_ACTIVE_HIGH == 0)
+
+	#define KEYPAD_BUTTON_PRESSED 		GPIO_LOW
+	#define KEYPAD_BUTTON_RELEASED 		GPIO_HIGH
+
+#else
+
+	#error "Undefined Keypad Configuration"
+
+#endif
+
+
+#define btn1_value		'7'
+#define btn2_value		'8'
+#define btn3_value 		'9'
+#define btn4_value		'4'
+#define btn5_value 		'5'
+#define btn6_value		'6'
+#define btn7_value 		'1'
+#define btn8_value		'2'
+#define btn9_value 		'3'
+#define btn10_value		'c'
+#define btn11_value 	'0'
+#define btn12_value		'='
+
+#if	(NUMBER_OF_COLUMNS == 4)
+#define btn13_value 	'/'
+#define btn14_value		'*'
+#define btn15_value		'-'
+#define btn16_value		'+'
+#endif
 
 /***********************************************************************************************/
 /*								  Section: MACRO FUNCTIONS DECLARATIONS                        */
@@ -56,25 +99,6 @@ typedef struct{
  *  						btn10	btn11	btn12	btn16
  */
 
-#define btn1_value		'7'
-#define btn2_value		'8'
-#define btn3_value 		'9'
-#define btn4_value		'4'
-#define btn5_value 		'5'
-#define btn6_value		'6'
-#define btn7_value 		'1'
-#define btn8_value		'2'
-#define btn9_value 		'3'
-#define btn10_value		'c'
-#define btn11_value 	'0'
-#define btn12_value		'='
-
-#if	(NUMBER_OF_COLUMNS == 4)
-#define btn13_value 	'/'
-#define btn14_value		'*'
-#define btn15_value		'-'
-#define btn16_value		'+'
-#endif
 
 
 /***********************************************************************************************/
